@@ -8,20 +8,12 @@ export default class Game extends Phaser.Scene {
 
     create() {
         this.PPM = 10;
-        
-        this.initMap();
-        
         this.life = 5;
-
+        
         this.missiles = this.physics.add.group();
 
-        this.turret = new Turret(this, this.dome, this.PPM, this.missiles);
-
-        const textStyle = { fontFamily: 'Arial', fontSize: '24px', color: '#ffffff' };
-
-        this.lifeText = this.add.text(20, 20, `Life : ${this.life}`, textStyle);
-        this.angleText = this.add.text(20, 50, `Launch angle : ${this.turret.getLaunchAngle()}`, textStyle);
-        this.missileText = this.add.text(20, 80, `Missile : ${this.turret.getCurrentMissileType()} (speed: ${this.turret.getCurrentMissileSpeed()} m/s)`, textStyle);
+        this.initMap();
+        this.initText();
     }
 
     update() {
@@ -30,6 +22,46 @@ export default class Game extends Phaser.Scene {
         this.missileText.setText(`Missile : ${this.turret.getCurrentMissileType()} (speed: ${this.turret.getCurrentMissileSpeed()} m/s)`);
         
         this.cleanupMissiles();
+    }
+
+    initMap() {
+        // canvas's constant
+        const canvas_W = this.scale.width;
+        const canvas_H = this.scale.height;
+        const centerX = canvas_W / 2;
+
+        // asset's constant
+        const ground_H = this.textures.get('ground').getSourceImage().height;
+        const house_H = this.textures.get('house').getSourceImage().height;
+        const dome_R = this.textures.get('dome').getSourceImage().height
+        const turretbase_H = this.textures.get('turretbase').getSourceImage().height;
+
+        const ground_lv = canvas_H - ground_H;
+
+        //--------------------------------//
+
+        // draw background, ground, dome
+        const background = this.add.image(centerX, canvas_H/2, 'background');
+        const ground = this.physics.add.sprite(centerX, canvas_H - ground_H/2, 'ground');
+        const dome = this.dome = this.physics.add.sprite(centerX, ground_lv - dome_R/2, 'dome');
+
+        // draw house
+        const houseY = canvas_H - ground_H - house_H / 2;
+
+        this.spawnHouses(centerX - 100, houseY);
+        this.spawnHouses(centerX + 40, houseY);
+        
+        // draw turret base
+        this.add.image(centerX, ground_lv - turretbase_H/2, 'turretbase');
+        this.turret = new Turret(this, centerX, ground_lv - turretbase_H, this.PPM, this.missiles);
+    }
+
+    initText () {
+        const textStyle = { fontFamily: 'Arial', fontSize: '24px', color: '#ffffff' };
+
+        this.lifeText = this.add.text(20, 20, `Life : `, textStyle); //`Life : ${this.life}`
+        this.angleText = this.add.text(20, 50, `Launch angle : `, textStyle); //`Launch angle : ${this.turret.getLaunchAngle()}`
+        this.missileText = this.add.text(20, 80, `Missile : `, textStyle); //`Missile : ${this.turret.getCurrentMissileType()} (speed: ${this.turret.getCurrentMissileSpeed()} m/s)`
     }
 
     cleanupMissiles() {
@@ -47,34 +79,23 @@ export default class Game extends Phaser.Scene {
         });
     }
 
-    initMap() {
-        const canvas_W = this.scale.width;
-        const canvas_H = this.scale.height;
+    spawnHouses(startX, startY) {
+        const spacingPairs = [
+        [25, 35],
+        [30, 30],
+        [35, 25]
+        ];
 
-        const ground_H = this.textures.get('ground').getSourceImage().height;
-        const house_H = this.textures.get('house').getSourceImage().height;
-        const ground_lv = canvas_H - ground_H;
+        const gaps = Phaser.Utils.Array.GetRandom(spacingPairs);
 
-        this.add.image(canvas_W/2, canvas_H/2, 'background');
+        let x = startX;
 
-        const ground = this.physics.add.sprite(canvas_W/2, canvas_H - ground_H/2, 'ground');
-        this.dome = this.physics.add.sprite(canvas_W/2, ground_lv - 150/2, 'dome');
+        for (let i = 0; i < 3; i++) {
+            this.add.sprite(x, startY, "house");
 
-        //draw houses
-        const centerX = canvas_W / 2;
-        const houseY = canvas_H - ground_H - house_H / 2;
-        const spacing = 50;
-
-        const startX = centerX - (2 * spacing);
-
-        const houses = this.physics.add.group({
-            key: 'house',
-            repeat: 4,
-            setXY: { 
-                x: startX,
-                y: houseY,
-                stepX: spacing
+            if (i < 2) {
+                x += gaps[i];
             }
-        });
+        }
     }
 }

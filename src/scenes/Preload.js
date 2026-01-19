@@ -11,12 +11,14 @@ export default class Preload extends Phaser.Scene {
         this.load.image('ground', 'assets/ground.png');
         this.load.image('missile', 'assets/missile.png');
         this.load.image('house', 'assets/house.png');
+        this.load.image('turrettop', 'assets/TurretTop.png');
+        this.load.image('turretbase', 'assets/TurretBase.png');
     }
 
     create() {
-        const dome_R = 150;
+        const dome_R = 250; // min = 150
         const domeGraphics = this.add.graphics();
-        domeGraphics.fillStyle(0xffffff, 0.1);
+        domeGraphics.fillStyle(0x0f766e, 0.12);
         domeGraphics.beginPath();
         domeGraphics.arc(dome_R, dome_R, dome_R, Math.PI, 0, false);
         domeGraphics.closePath();
