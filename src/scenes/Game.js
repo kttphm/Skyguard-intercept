@@ -26,12 +26,7 @@ export default class Game extends Phaser.Scene {
         });
 
         this.initEnemyCollisions();
-
-        this.spawnEnemy();
-        this.spawnEnemy();
-        this.spawnEnemy();
-        this.spawnEnemy();
-        this.spawnEnemy();
+        this.startEnemySpawning();
     }
 
     update() {
@@ -142,6 +137,16 @@ export default class Game extends Phaser.Scene {
     spawnEnemy() {
         const enemy = new Enemy(this, this.houses, this.PPM);
         if (enemy.active) this.enemies.add(enemy);
+    }
+
+    startEnemySpawning() {
+        this.spawnEnemy();
+        this.enemySpawnTimer = this.time.addEvent({
+            delay: 500, // ms
+            callback: this.spawnEnemy,
+            callbackScope: this,
+            loop: true
+        });
     }
 
     cleanupMissiles() {
