@@ -25,7 +25,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         const Sy = Sy_px / PPM;
 
         // Random horizontal velocity (m/s)
-        const Vx = Phaser.Math.FloatBetween(3, 7);
+        const Vx = Phaser.Math.FloatBetween(20, 50);
 
         const g = 9.8;
 

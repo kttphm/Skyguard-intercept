@@ -8,7 +8,7 @@ export default class Game extends Phaser.Scene {
     }
 
     create() {
-        this.PPM = 1.5;
+        this.PPM = 2;
         this.life = 5;
         this.physics.world.gravity.y = 9.8 * this.PPM;
 

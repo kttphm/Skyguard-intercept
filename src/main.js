@@ -18,7 +18,7 @@ const config = {
     scene:  [Preload, Menu, Game, Credit],
     physics: {
         default: 'arcade',
-        debug: true
+        debug: false
     },
     scale: {
         mode: Phaser.Scale.FIT,
