@@ -109,9 +109,15 @@ export default class Game extends Phaser.Scene {
     }
 
     initEnemyCollisions() {
+        this.physics.add.overlap(this.missiles, this.ground, this.onPlayerHitGround, null, this);
         this.physics.add.overlap(this.enemies, this.ground, this.onEnemyHitGround, null, this);
         this.physics.add.overlap(this.enemies, this.missiles, this.onEnemyHitMissile, null, this);
         this.physics.add.overlap(this.enemies, this.houses, this.onEnemyHitHouse, null, this);
+    }
+
+    onPlayerHitGround(obj1, obj2) {
+        const missile = obj1 === this.ground ? obj2 : obj1;
+        if (missile.active) missile.destroy();
     }
 
     onEnemyHitGround(obj1, obj2) {
@@ -144,10 +150,9 @@ export default class Game extends Phaser.Scene {
         const margin = 100; // Destroy missiles slightly outside screen bounds
         
         this.missiles.children.entries.forEach(missile => {
-            if (missile.x < -margin || 
-                missile.x > canvas_W + margin || 
-                missile.y < -margin || 
-                missile.y > canvas_H + margin) {
+            if (missile.x < -margin ||           // left
+                missile.x > canvas_W + margin || // right
+                missile.y > canvas_H + margin) { // down
                 missile.destroy();
             }
         });

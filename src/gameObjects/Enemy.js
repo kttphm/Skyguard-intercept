@@ -15,7 +15,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         }
 
         this.targetHouse = Phaser.Utils.Array.GetRandom(houses);
-        this.launch();
+        //this.launch();
     }
 
     launch() {
@@ -29,7 +29,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         const Sy = Sy_px / PPM;
 
         // Random horizontal velocity (m/s)
-        const Vx = Phaser.Math.FloatBetween(20, 50);
+        const Vx = Phaser.Math.FloatBetween(-100, 100);
 
         const g = 9.8;
 
